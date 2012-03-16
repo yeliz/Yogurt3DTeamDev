@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" 
+			   frameRate="60"
+			   creationComplete="application1_creationCompleteHandler(event)"
+			   backgroundAlpha="0">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			import tr.com.yogurt3d.core.Time;
+			import tr.com.yogurt3d.core.Yogurt3D;
+			import tr.com.yogurt3d.core.camera.Camera3D;
+			import tr.com.yogurt3d.core.managers.IDManager;
+			import tr.com.yogurt3d.core.render.texture.RenderCubeTexture;
+			import tr.com.yogurt3d.core.render.texture.RenderDepthTexture;
+			import tr.com.yogurt3d.core.render.texture.RenderTexture;
+			import tr.com.yogurt3d.core.scene.Scene3D;
+			import tr.com.yogurt3d.core.scene.SceneObject;
+			import tr.com.yogurt3d.core.scene.SceneObjectRenderable;
+			import tr.com.yogurt3d.core.viewport.Viewport;
+			import tr.com.yogurt3d.presets.geometry.BoxMesh;
+			import tr.com.yogurt3d.presets.material.MaterialFill;
+			
+			protected function application1_creationCompleteHandler(event:FlexEvent):void
+			{
+				var view3D:Viewport = new Viewport();
+				container.addChild( view3D );
+				view3D.autoUpdate = true;
+				view3D.scene = new Scene3D();
+				view3D.camera = new Camera3D();
+				view3D.camera.transformation.z = 5;
+				/* var rtt:RenderTexture = new RenderTexture();
+				rtt.autoUpdate = true;
+				view3D.scene.addRenderTarget( rtt );
+				var rtt1:RenderDepthTexture = new RenderDepthTexture();
+				view3D.scene.addRenderTarget( rtt1 );
+				var rtt3:RenderDepthTexture = new RenderDepthTexture();
+				rtt3.priority = 110;
+				view3D.scene.addRenderTarget( rtt3 );
+				var rtt2:RenderCubeTexture = new RenderCubeTexture();
+				view3D.scene.addRenderTarget( rtt2 ); */
+				
+				var scn:SceneObjectRenderable = new SceneObjectRenderable();
+				scn.material = new MaterialFill(0xFF0000);
+				scn.geometry = new BoxMesh(1,1,1);
+				scn.userID = "cube";
+				scn.transformation.x = 1;
+				scn.transformation.rotationY = 45;
+				view3D.scene.addChild( scn );
+				
+				
+				Yogurt3D.onUpdate.add( update );
+			}
+			
+			private function update():void{
+				var obj:SceneObject = IDManager.getObjectByUserID("cube") as SceneObject;
+				obj.transformation.rotationY = Time.timeSeconds * 45;
+				obj.transformation.rotationX = Math.sin( Time.timeSeconds ) * 45;
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:UIComponent id="container">
+		
+	</mx:UIComponent>
+</s:Application>
